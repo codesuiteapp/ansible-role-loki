@@ -1,0 +1,30 @@
+---
+- name: Creates directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ adm_user }}"
+    group: "{{ adm_group }}"
+    mode: '0755'
+    force: false
+  with_items:
+    - "{{ loki_home }}"
+    - "{{ loki_data }}"
+
+- name: Copy file
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ adm_user }}"
+    group: "{{ adm_group }}"
+    mode: '0644'
+    backup: true
+  with_items:
+    - { src: '.env.j2', dest: '{{ loki_home }}/.env' }
+    - { src: 'docker-compose.yml.j2', dest: '{{ loki_home }}/docker-compose.yml' }
+    - { src: 'loki-local-config.yml.j2', dest: '{{ loki_home }}/loki-local-config.yml' }
+
+- name: Restart loki
+  ansible.builtin.shell: echo success
+  notify:
+    Restart loki

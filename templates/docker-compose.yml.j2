@@ -1,0 +1,37 @@
+version: "3"
+services:
+  loki:
+    image: ${DOCKER_IMAGE}
+    container_name: loki
+    environment:
+      - TZ=Asia/Seoul
+    command: -config.file=/etc/loki/local-local-config.yml
+{% if use_traefik %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.loki.entrypoints=web,websecure"
+      - "traefik.http.routers.loki.rule=Host(`${trf_domain}`) && PathPrefix(`/loki`)"
+    {% if use_traefik_tls %}
+      - "traefik.http.routers.loki.tls=true"
+    {% endif %}
+{% endif %}
+    ports:
+      - "{{ loki_port }}:3100"
+    volumes:
+      - {{ loki_home }}/loki-local-config.yml:/etc/loki/local-local-config.yml
+      - {{ loki_data }}:/loki
+    restart: unless-stopped
+{% if use_extra_hosts %}
+    extra_hosts:
+    {% for host in extra_hosts %}
+    - {{ host }}
+    {% endfor %}
+{% endif %}
+{% if use_dkr_net %}
+    networks:
+      - {{ dkr_network }}
+
+networks:
+  {{ dkr_network }}:
+    external: true
+{% endif %}

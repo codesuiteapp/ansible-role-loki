@@ -1,1 +1,1 @@
-# ansible-role-loki
+# Ansible Role: Loki
