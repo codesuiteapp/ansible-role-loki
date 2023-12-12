@@ -3,7 +3,6 @@ image_registry_server: "docker.io"
 loki_image: "grafana/loki"
 loki_ver: "latest"
 loki_port: 3100
-loki_period: 120
 
 docker_compose_bin: "docker-compose"
 use_dkr_net: false
