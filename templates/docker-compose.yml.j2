@@ -3,6 +3,7 @@ services:
   loki:
     image: ${DOCKER_IMAGE}
     container_name: loki
+    user: root
     environment:
       - TZ=Asia/Seoul
     command: -config.file=/etc/loki/local-local-config.yml
