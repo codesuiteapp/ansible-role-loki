@@ -19,7 +19,7 @@ services:
       - "{{ loki_port }}:3100"
     volumes:
       - {{ loki_home }}/loki-local-config.yml:/etc/loki/local-local-config.yml
-      - {{ loki_data }}:/loki
+      - {{ loki_data }}:/tmp/loki
     restart: unless-stopped
 {% if use_extra_hosts %}
     extra_hosts:
