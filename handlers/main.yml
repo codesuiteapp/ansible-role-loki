@@ -1,15 +1,24 @@
+---
 - name: Start loki
   ansible.builtin.command: "{{ docker_compose_bin }} up --detach"
   args:
     chdir: "{{ loki_home }}"
-  register: result
-  changed_when: result.changed
+  register: start_result
+  changed_when: start_result.rc == 0
 
-- name: Restart loki
-  ansible.builtin.shell:
-    "{{ docker_compose_bin }} down; {{ docker_compose_bin }} up --detach"
+- name: Stop loki
+  ansible.builtin.command: "{{ docker_compose_bin }} down"
   args:
     chdir: "{{ loki_home }}"
-  register: result
-  changed_when: result.changed
+  register: stop_result
+  changed_when: stop_result.rc == 0
+
+- name: Restart loki
+  ansible.builtin.shell: |
+    {{ docker_compose_bin }} down
+    {{ docker_compose_bin }} up --detach
+  args:
+    chdir: "{{ loki_home }}"
+  register: restart_result
+  changed_when: restart_result.rc == 0
   ignore_errors: true
