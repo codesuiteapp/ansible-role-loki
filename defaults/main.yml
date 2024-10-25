@@ -2,6 +2,7 @@
 image_registry_server: "docker.io"
 loki_image: "grafana/loki"
 loki_ver: "latest"
+container_name: loki
 loki_port: 3100
 
 docker_compose_bin: "docker-compose"
